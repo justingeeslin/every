@@ -32,6 +32,33 @@ gulp.task('css', function () {
 		.pipe(gulp.dest('dist/'));
 });
 
+gulp.task('md', function () {
+  var markdown = require('gulp-markdown');
+
+  return gulp.src('markdown/*.md')
+        .pipe(markdown())
+        .pipe(gulp.dest('html'));
+})
+
+gulp.task('html', function () {
+    'use strict';
+    var twig = require('gulp-twig');
+    var tap = require('gulp-tap');
+    const path = require('path');
+
+    gulp.src('html/*.html')
+      .pipe(tap(function(file) {
+        gulp.src('html/index.twig')
+          .pipe(twig({
+            data: {
+              htmlInclude: path.basename(file.path),
+            }
+          }))
+          .pipe(rename(path.basename(file.path)))
+          .pipe(gulp.dest('dist/'));
+      }));
+});
+
 gulp.task('servers', gulp.shell.task([
     'php -S 0.0.0.0:9081'
 ]))
@@ -40,7 +67,11 @@ gulp.task('watch', function() {
   gulp.watch('js/*.js', ['js']);
   gulp.watch('index.js', ['js']);
   gulp.watch('css/*.scss', ['css']);
+  gulp.watch('html/*.twig', ['html']);
+
+  gulp.watch('markdown/*.md', ['md']);
+  gulp.watch('html/*.html', ['html']);
 
 });
 
-gulp.task('default', ['js','watch', 'css'])
+gulp.task('default', ['js', 'watch', 'css', 'html'])
