@@ -18,7 +18,7 @@ gulp.task('js', function () {
     .pipe(source('app.js'))
     .pipe(buffer())
     .on('error', gutil.log)
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest('./docs/'));
 });
 
 gulp.task('css', function () {
@@ -29,7 +29,7 @@ gulp.task('css', function () {
     .pipe(rename(function(path) {
 			path.extname = '.css';
 		}))
-		.pipe(gulp.dest('dist/'));
+		.pipe(gulp.dest('docs/'));
 });
 
 gulp.task('md', function () {
@@ -55,7 +55,7 @@ gulp.task('html', function () {
             }
           }))
           .pipe(rename(path.basename(file.path)))
-          .pipe(gulp.dest('dist/'));
+          .pipe(gulp.dest('docs/'));
       }));
 });
 
