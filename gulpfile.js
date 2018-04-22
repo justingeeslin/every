@@ -40,6 +40,46 @@ gulp.task('md', function () {
         .pipe(gulp.dest('html'));
 })
 
+var posts = [
+  /*
+  {
+    title: "First Post",
+    body: "First post is the deepest, baby I know.",
+    html: "",
+  }
+  */
+]
+gulp.task('blog-collectposts', function () {
+  console.log('Collecting posts..')
+  var fs = require("fs")
+  var tap = require('gulp-tap');
+  const path = require('path');
+
+  // Read HTML into object
+  return gulp.src('html/*.html')
+    .pipe(tap(function(file) {
+      fs.readFile(file.path, "utf-8", function(err, _data) {
+
+        posts.push({html: _data});
+      })
+    }))
+
+});
+
+gulp.task('blog', ['blog-collectposts'], function() {
+  console.log('Making blog.twig')
+  // Pass object into twig
+  var twig = require('gulp-twig');
+  gulp.src('html/blog.twig')
+    .pipe(twig({
+      data: {
+        posts: posts
+      }
+    }))
+    .pipe(rename("blog.html"))
+    .pipe(gulp.dest('docs/'));
+})
+
 gulp.task('html', function () {
     'use strict';
     var twig = require('gulp-twig');
@@ -68,10 +108,10 @@ gulp.task('watch', function() {
   gulp.watch('js/*.js', ['js']);
   gulp.watch('index.js', ['js']);
   gulp.watch('css/*.scss', ['css']);
-  gulp.watch('html/*.twig', ['html']);
+  gulp.watch('html/*.twig', ['html', 'blog']);
 
   gulp.watch('markdown/*.md', ['md']);
-  gulp.watch('html/*.html', ['html']);
+  gulp.watch('html/*.html', ['html', 'blog']);
 
 });
 
