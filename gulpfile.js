@@ -73,6 +73,7 @@ gulp.task('blog', ['blog-collectposts'], function() {
   gulp.src('html/blog.twig')
     .pipe(twig({
       data: {
+        pageTitle: 'Blog',
         posts: posts
       }
     }))
