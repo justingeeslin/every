@@ -51,6 +51,7 @@ gulp.task('html', function () {
         gulp.src('html/index.twig')
           .pipe(twig({
             data: {
+              pageTitle: 'Page Title',
               htmlInclude: path.basename(file.path),
             }
           }))
